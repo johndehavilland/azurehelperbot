@@ -1,0 +1,16 @@
+{
+    "queues": {
+      // The maximum interval in milliseconds between
+      // queue polls. The default is 1 minute.
+      "maxPollingInterval": 2000,
+      // The number of queue messages to retrieve and process in
+      // parallel (per job function). The default is 16 and the maximum is 32.
+      "batchSize":1,
+      // The number of times to try processing a message before
+      // moving it to the poison queue. The default is 5.
+      "maxDequeueCount": 1,
+      // The threshold at which a new batch of messages will be fetched.
+      // The default is batchSize/2.
+      "newBatchThreshold": 1
+    }
+}

@@ -1,0 +1,11 @@
+{
+ "frameworks": {
+   "net46":{
+     "dependencies": {
+       "System.IO.Compression.ZipFile":"4.3.0",
+       "WindowsAzure.Storage":"7.2.1",
+        "Microsoft.Azure.Search":"3.0.1"
+     }
+   }
+ }
+}

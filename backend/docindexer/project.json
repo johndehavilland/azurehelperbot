@@ -1,0 +1,15 @@
+{
+ "frameworks": {
+   "net46":{
+     "dependencies": {
+       "Newtonsoft.Json":"7.0.1",
+       "HtmlAgilityPack": "1.4.9.5",
+       "CommonMark.NET": "0.13.4",
+       "Microsoft.Azure.Search":"3.0.1",
+        "WindowsAzure.Storage":"7.2.1",
+        "Microsoft.Spatial":"6.15.0",
+        "Microsoft.Rest.ClientRuntime.Azure":"3.3.4"
+     }
+   }
+ }
+}
