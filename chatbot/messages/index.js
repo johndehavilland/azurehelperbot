@@ -76,7 +76,7 @@ function searchActivity(session, args, next){
                             };
         
         var dt = new Date();
-        var indexName = "azure-docs-" + dt.getFullYear() + (dt.getMonth() + 1);
+        var indexName = "azure-docs-" + dt.getFullYear() + ("0" + (dt.getMonth() + 1)).slice(-2);
         
         searchClient.search(indexName, searchOptions, function(err, results) {
                                                             console.log(JSON.stringify(results));
