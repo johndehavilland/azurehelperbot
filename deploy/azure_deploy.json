@@ -20,10 +20,10 @@
                 "description": "The name of the bot that you wish to create."
             }
         },
-        "cognitiveServiceName": {
+        "cognitiveServiceAPIKey": {
             "type": "string",
             "metadata": {
-                "description": "The name of the bot that you wish to create."
+                "description": "The api key for your cognitive services text analytics"
             }
         },
         "storageAccountType": {
@@ -59,7 +59,7 @@
             "kind": "functionapp",
             "name": "[concat(parameters('botName'), '-server')]",
             "apiVersion": "2015-08-01",
-            "location": "East US 2",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "name": "[concat(parameters('botName'), '-server')]",
                 "numberOfWorkers": 0
@@ -72,7 +72,7 @@
             "kind": "functionapp,botapp",
             "name": "[parameters('botName')]",
             "apiVersion": "2015-08-01",
-            "location": "East US 2",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "name": "[parameters('botName')]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat(parameters('botName'), '-server'))]"
@@ -95,19 +95,6 @@
                 "partitionCount": 1,
                 "hostingMode": "Default"
             },
-            "resources": [],
-            "dependsOn": []
-        },
-        {
-            "type": "Microsoft.CognitiveServices/accounts",
-            "sku": {
-                "name": "F0"
-            },
-            "kind": "TextAnalytics",
-            "name": "[parameters('cognitiveServiceName')]",
-            "apiVersion": "2016-02-01-preview",
-            "location": "westus",
-            "properties": {},
             "resources": [],
             "dependsOn": []
         },
@@ -173,6 +160,10 @@
                         {
                             "name": "SearchKey",
                             "value":"[listAdminKeys(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), providers('Microsoft.Search', 'searchServices').apiVersions[0]).PrimaryKey]"
+                        },
+                        {
+                            "name":"CognitiveServiceAPIKey",
+                            "value":"[(parameters('cognitiveServiceAPIKey'))]"
                         }
                     ]
                 }
@@ -193,10 +184,6 @@
         }
     ],
     "outputs": {
-    "cognitiveSvcKey": {
-       "value": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), providers('Microsoft.Search', 'searchServices').apiVersions[0]).PrimaryKey]", 
-        "type" : "string"
-
-    }
+        "appname": "[parameters('appName')]"
     }
 }

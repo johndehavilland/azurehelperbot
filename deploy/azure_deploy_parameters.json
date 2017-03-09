@@ -9,10 +9,7 @@
       "value": "jdhazuretestbot"
     },
      "searchServiceName": {
-      "value": "azuretestbotsearch"
-    },
-    "cognitiveServiceName": {
-      "value": "azurecogsvcjdh"
+      "value": "azurechatbotsearch"
     }
   }
 }
