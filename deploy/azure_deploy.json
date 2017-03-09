@@ -26,18 +26,6 @@
                 "description": "The api key for your cognitive services text analytics"
             }
         },
-        "LuisApiKey": {
-            "type": "string",
-            "metadata": {
-                "description": "The api key for luis.ai"
-            }
-        },
-         "LuisAppId": {
-            "type": "string",
-            "metadata": {
-                "description": "The app id defined in luis.ai"
-            }
-        },
 
         "storageAccountType": {
             "type": "string",
@@ -91,14 +79,6 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat(parameters('botName'), '-server'))]",
                 "siteConfig": {
                     "appSettings": [
-                        {
-                            "name": "LuisAPIKey",
-                            "value": "[parameters('LuisAPIKey')]"
-                        },
-                         {
-                            "name": "LuisAppId",
-                            "value": "[parameters('LuisAppId')]"
-                        },
                          {
                             "name": "AzureSearchKey",
                             "value":"[listAdminKeys(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), providers('Microsoft.Search', 'searchServices').apiVersions[0]).PrimaryKey]"
