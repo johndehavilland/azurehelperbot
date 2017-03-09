@@ -1,5 +1,5 @@
 ﻿Login-AzureRmAccount
-New-AzureRmResourceGroup -ResourceGroupName "chatbot-azure-helper" -Location "East US 2"
+New-AzureRmResourceGroup -ResourceGroupName "chatbot-azure-helper" -Location "East US"
 New-AzureRmResourceGroupDeployment -ResourceGroupName "chatbot-azure-helper" -TemplateParameterFile .\azure_deploy_parameters.json -TemplateFile .\azure_deploy.json
 cd ..
 git init
