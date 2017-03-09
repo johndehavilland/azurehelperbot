@@ -181,7 +181,7 @@
                             "value": "6.5.0"
                         },
                         {
-                            "name": "SearchKey",
+                            "name": "AzureSearchApiKey",
                             "value":"[listAdminKeys(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')), providers('Microsoft.Search', 'searchServices').apiVersions[0]).PrimaryKey]"
                         },
                         {
