@@ -9,18 +9,17 @@ using CommonMark;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Net.Http.Headers;
-using System.Text; 
+using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json.Linq; 
+using Newtonsoft.Json.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System.Configuration;
 
-//Function to process all the md files from the Azure queue and store in Azure Search
 public static void Run(string msg, TraceWriter log)
 {
     log.Info($"Doc Parser function began execution at: {DateTime.Now}");
@@ -30,7 +29,6 @@ public static void Run(string msg, TraceWriter log)
     string fileName = string.Empty;
 
     CloudStorageAccount storageAccount = CloudStorageAccount.Parse(azureQueueConnString);
-    
     CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
  
     CloudQueue queue = queueClient.GetQueueReference("docqueue");
@@ -66,7 +64,9 @@ public static void Run(string msg, TraceWriter log)
                     Url = ""
                 };
 
-               //this means that the contents sit on the file store not on the queue
+               
+
+                //this means that the contents sit on the file store not on the queue
                 if (fileContent.StartsWith("FILEPROCESS: "))
                 {
                     fileName = fileContent.Substring(13, fileContent.Length - 13);
@@ -133,9 +133,7 @@ public static void Run(string msg, TraceWriter log)
                 azDoc.Title = azDoc.Title.Replace("pageTitle=\"", "");
 
                 azDoc.Title = azDoc.Title.Replace("\"", "");
-
                 azDoc.Title = azDoc.Title.Replace("| Microsoft Docs", "");
-
                 azDoc.Title = azDoc.Title.Replace("| Microsoft Doc", "");
 
                 docs.Add(azDoc);
@@ -147,7 +145,8 @@ public static void Run(string msg, TraceWriter log)
         catch (Exception ex)
         {
             log.Info(ex.Message);
-            throw;
+            log.Info(ex.StackTrace);
+            
 
         }
     }

@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "type": "queueTrigger",
+      "name": "msg",
+      "direction": "in",
+      "queueName": "docdl",
+      "connection": "AzureWebJobsStorage"
+    }
+  ],
+  "disabled": false
+}
