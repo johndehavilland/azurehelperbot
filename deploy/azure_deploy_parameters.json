@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "azuredochelperapp"
+      "value": "azuredochelperapp1"
     },
     "botName": {
-      "value": "jdhazuretestbot"
+      "value": "jdhazuretestbot1"
     },
      "searchServiceName": {
-      "value": "azurechatbotsearch"
+      "value": "azurechatbotsearch1"
     }
   }
 }
