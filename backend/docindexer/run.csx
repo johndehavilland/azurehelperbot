@@ -153,23 +153,26 @@ public static void Run(string msg, TraceWriter log)
 
     log.Info("Processed " + docs.Count + " docs");
 
-    //uses cognitive service api to extract keywords from descriptions
-    GetKeywords(docs, log).Wait();
+    if(docs.Count > 0)
+    {
+        //uses cognitive service api to extract keywords from descriptions
+        GetKeywords(docs, log).Wait();
 
-    string searchServiceName = ConfigurationManager.AppSettings["AzureSearchSvcName"];
+        string searchServiceName = ConfigurationManager.AppSettings["AzureSearchSvcName"];
 
-    string apiKey = ConfigurationManager.AppSettings["AzureSearchApiKey"];
+        string apiKey = ConfigurationManager.AppSettings["AzureSearchApiKey"];
 
-    string indexName = string.Format("azure-docs-{0}", DateTime.Now.ToString("yyyyMM"));
+        string indexName = string.Format("azure-docs-{0}", DateTime.Now.ToString("yyyyMM"));
 
-    SearchServiceClient serviceClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
+        SearchServiceClient serviceClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
 
-    DeleteAzureDocsIndexIfExists(serviceClient, indexName);
+        DeleteAzureDocsIndexIfExists(serviceClient, indexName);
 
-    CreateAzureDocsIndex(serviceClient, indexName);
-    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient(indexName);
+        CreateAzureDocsIndex(serviceClient, indexName);
+        ISearchIndexClient indexClient = serviceClient.Indexes.GetClient(indexName);
 
-    UploadDocuments(indexClient, docs, log);
+        UploadDocuments(indexClient, docs, log);
+    }
 }
 
 //Upload documents in batches for better performance
@@ -297,7 +300,9 @@ static async Task GetKeywords(List<AzureDoc> allDocs, TraceWriter log)
     }
     catch (Exception ex)
     {
+        log.Info("Error getting keywords - is the text analytics key set correctly?");
         log.Info(ex.Message);
+    
     }
 }
 
