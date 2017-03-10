@@ -156,7 +156,7 @@ public static void Run(string msg, TraceWriter log)
     //uses cognitive service api to extract keywords from descriptions
     GetKeywords(docs, log).Wait();
 
-    string searchServiceName = "azuredocs";
+    string searchServiceName = ConfigurationManager.AppSettings["AzureSearchSvcName"];
 
     string apiKey = ConfigurationManager.AppSettings["AzureSearchApiKey"];
 
