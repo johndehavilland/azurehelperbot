@@ -25,7 +25,7 @@ Try the following types of phrases:
 # How to set it up
 
 1. Clone this repo.
-2. cd into ./deploy
+2. cd into deploy folder.
 3. Run deploy.ps1
 4. When this is complete, navigate to the resource group and choose the bot service.
 5. On the bot screen create a new application.
@@ -36,12 +36,13 @@ Try the following types of phrases:
     AzureSearchEndpoint - this will be the full url of your azure search service (e.g. https://mysearch.windows.net)
 9. Navigate to chatbot folder in this repo.
 10. Push the code from here into your bot app using the following:
+```
 git init
 git add .
 git commit -m "init"
 git remote add azure "https://<name_of_your_bot>.scm.azurewebsites.net"
 git push azure master
-
+```
 11. Navigate to your Azure Function service
 12. Find the repocloner function and press Run. This will kick off the first run of the process to populate Azure Search. This process should take around 10 mins. You can verify it is complete when you see the index in Azure Search populated with several thousand documents.
 
