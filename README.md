@@ -35,9 +35,13 @@ Try the following types of phrases:
 5. On the bot screen create a new application.
 6. Choose NodeJS and choose LUIS.
 7. Follow the steps in the portal to set up a LUIS app. This will create a blank luis app for you and connect it to the bot.
-8. Switch to app settings (via settings->App Settings) and add the following two app settings:
-    AzureSearchKey - this can be found from access keys in your Azure Search Service
-    AzureSearchEndpoint - this will be the full url of your azure search service (e.g. https://mysearch.windows.net)
+8. Switch to the bot's app settings (via settings->App Settings) and add the following two app settings:
+    
+    * AzureSearchKey - this can be found from access keys in your Azure Search Service
+    * AzureSearchEndpoint - this will be the full url of your Azure search service (e.g. https://mysearchsvc.search.windows.net)
+
+    ![Image of settings](settings.png)
+
 9. Navigate to chatbot folder in this repo.
 10. Push the code from here into your bot app using the following:
 ```
