@@ -1,9 +1,19 @@
-﻿Login-AzureRmAccount
-New-AzureRmResourceGroup -ResourceGroupName "chatbot-azure-2" -Location "East US"
-New-AzureRmResourceGroupDeployment -ResourceGroupName "chatbot-azure-2" -TemplateParameterFile .\azure_deploy_parameters.json -TemplateFile .\azure_deploy.json
+﻿param (
+    [string]$resourceGroupName,
+    [string]$location="East US",
+    [string]$appName,
+    [string]$botName,
+    [string]$searchServiceName,
+    [string]$textAnalyticsSvcName
+ )
+Login-AzureRmAccount
+$subscriptionName = (Get-AzureRmSubscription | Out-GridView -Title "Select an Azure Subscription ..." -PassThru).SubscriptionName
+Select-AzureRmSubscription -SubscriptionName $subscriptionName
+New-AzureRmResourceGroup -ResourceGroupName $resourceGroupName -Location $location
+New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile .\azure_deploy.json -appName $appName -botName $botName -searchServiceName $searchServiceName -cognitiveServiceName $textAnalyticsSvcName
 cd ..\backend
 git init
 git add .
 git commit -m "init"
-git remote add azure2 "https://jdhazuredochelperapp.scm.azurewebsites.net"
+git remote add azure "https://$appName.scm.azurewebsites.net"
 git push azure master
