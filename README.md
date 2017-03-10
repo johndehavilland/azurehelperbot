@@ -37,7 +37,7 @@ Try the following types of phrases:
 6. Find the repocloner function and press Run. This will kick off the first run of the process to populate Azure Search. This process should take around 10 mins. You can verify it is complete when you see the index in Azure Search populated with several thousand documents. While this is running you can move onto the next steps.
 7. Navigate to the resource group you created and choose the bot service.
 8. On the bot screen create a new application.
-9. Choose NodeJS and choose LUIS (this creates a basic templated bot app).
+9. Choose NodeJS and choose Language Understanding (this creates a basic templated bot app).
 10. Follow the steps in the portal to set up a LUIS app. This will create a blank LUIS app for you and connect it to the bot.
 11. Switch to the bot's app settings (via settings->App Settings) and add the following two app settings:
     
@@ -56,5 +56,5 @@ git remote add azure "https://<name_of_your_bot>.scm.azurewebsites.net"
 git push azure master
 ```
 
-Once this has complete you can begin to try out your chat bot. You will need to go to [https://luis.ai](https://luis.ai) and train LUIS with some utterances. Included in this repo is a set of precanned utterances that you can import directly into LUIS called LUISApp.json.
+Once this has complete you can begin to try out your chat bot. You will need to go to [http://luis.ai](http://luis.ai) and train LUIS with some utterances. Included in this repo is a set of precanned utterances that you can import directly into LUIS called LUISApp.json.
 
