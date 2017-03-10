@@ -16,14 +16,13 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
     openIdMetadata: process.env['BotOpenIdMetadata']
 });
 
-var bot = new builder.UniversalBot(connector);
-
 var searchClient = AzureSearch({
     url: process.env.AzureSearchEndpoint,
     key:process.env.AzureSearchKey
 });
 
-// Make sure you add code to validate these fields
+var bot = new builder.UniversalBot(connector);
+
 var luisAppId = process.env.LuisAppId;
 var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'api.projectoxford.ai';
@@ -32,18 +31,14 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' +
 
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
-
-.matches('None', (session, args) => {
-    session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
-})
-
-.matches('SearchActivity', [searchActivity, getSearchResults])
-
-.matches('LimitActivity', [limitsActivity])
-
-.onDefault((session) => {
-    session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-});
+                    .matches('None', (session, args) => {
+                        session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
+                    })
+                    .matches('SearchActivity', [searchActivity, getSearchResults])
+                    .matches('LimitActivity', [limitsActivity])
+                    .onDefault((session) => {
+                        session.send('Sorry, I did not understand \'%s\'.', session.message.text);
+                    });
 
 bot.dialog('/', intents);    
 
@@ -55,21 +50,29 @@ if (useEmulator) {
     });
     server.post('/api/messages', connector.listen());    
 } else {
-    module.exports = { default: connector.listen() }
+   var listener = connector.listen();
+    var withLogging = function(context, req) {
+        listener(context, req);
+    }
+
+    module.exports = { default: withLogging }
 }
 
 function searchActivity(session, args, next){
+    console.log("search activity triggered");
 
     var searchTerm = builder.EntityRecognizer.findEntity(args.entities, 'SearchTerm');
     
     if (!searchTerm) {
-        builder.Prompts.text(session, "Hmmm...couldn't understand what you were searching for...could you rephrase that?");
+        console.log("searchTerm not recognized: " + args.entities);
+        session.send('Hmm, could you rephrase that?');
     } else {
 
         console.log("entity found: " + searchTerm.entity)
         
         //using the entity query the azure search index
-        var searchOptions = { search: searchTerm.entity, 
+        var searchOptions = { 
+                                search: searchTerm.entity, 
                                 '$select': 'Title,Url,Description,FileName', 
                                 scoringProfile:'booster',
                                 searchMode: 'all'
@@ -79,11 +82,11 @@ function searchActivity(session, args, next){
         var indexName = "azure-docs-" + dt.getFullYear() + ("0" + (dt.getMonth() + 1)).slice(-2);
         
         searchClient.search(indexName, searchOptions, function(err, results) {
-                                                            console.log(JSON.stringify(results));
-                                                            next({ response: results});
-                                                            
-                                                            if(err){console.log("error  " + err);}
-                                                        })
+                                                            next({ response: results});                            
+                                                            if(err){
+                                                                console.log("error  " + err);
+                                                            }
+                                                        });
     }
 }
 
@@ -92,22 +95,26 @@ function getSearchResults (session, results) {
     var searchResponse = [];
     var searchResults = results.response;
     
-    for(var count = 0; count < searchResults.length; count++){
+    for(var count = 0; count < 3; count++){
         if (searchResults[count]) {
             var docUrl = "https://docs.microsoft.com/en-us/azure/"+ searchResults[count].Url
             var title = searchResults[count].Title;
             var description = searchResults[count].Description;       
-             var fileName = searchResults[count].FileName;
-            searchResponse.push({url:docUrl, title:title, description:description, fileName:fileName});
+            var fileName = searchResults[count].FileName;
+            searchResponse.push({
+                url:docUrl, 
+                title:title,
+                description:description,
+                fileName:fileName
+            });
         }
     }
 
     if(searchResponse.length > 0){
         session.send("Found a couple of articles \n\n"
            + "1. [%(resp[0].title)s](%(resp[0].url)s) - %(resp[0].description)s \n\n"
-           + "2. [%(resp[1].title)s](%(resp[1].url)s) - %(resp[1].fileName)s",
+           + "2. [%(resp[1].title)s](%(resp[1].url)s) - %(resp[1].description)s",
            {resp: searchResponse});
-        
     } else {
         session.send("Ooops, seems like I couldn't find anything...try rewording your phrase.");
     }
