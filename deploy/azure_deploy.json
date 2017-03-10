@@ -20,7 +20,7 @@
                 "description": "The name of the bot that you wish to create."
             }
         },
-        "cognitiveServiceAPIKey": {
+        "cognitiveServiceName": {
             "type": "string",
             "metadata": {
                 "description": "The api key for your cognitive services text analytics"
@@ -40,12 +40,14 @@
                 "description": "Storage Account type"
             }
         }
+
     },
     "variables": {
         "functionAppName": "[parameters('appName')]",
         "hostingPlanName": "[parameters('appName')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
-        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        "cogsvcId": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', parameters('cognitiveServiceName'))]"
     },
     "resources": [
           {
@@ -149,7 +151,8 @@
             "kind": "functionapp",            
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                 "[resourceId('Microsoft.CognitiveServices/accounts/', parameters('cognitiveServiceName'))]"
             ],
 			
             "properties": {
@@ -190,7 +193,7 @@
                         },
                         {
                             "name":"CognitiveServiceAPIKey",
-                            "value":"[parameters('cognitiveServiceAPIKey')]"
+                             "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('cognitiveServiceName')), providers('Microsoft.CognitiveServices', 'accounts').apiVersions[0]).key1]"
                         },          
                         {
                             "name":"AzureDocsRepo",
@@ -216,6 +219,19 @@
 					  }
 					}
 				  ]			
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "TextAnalytics",
+            "name": "[parameters('cognitiveServiceName')]",
+            "apiVersion": "2016-02-01-preview",
+            "location": "westus",
+            "properties": {},
+            "resources": [],
+            "dependsOn": []
         }
     ],
     "outputs": {}
